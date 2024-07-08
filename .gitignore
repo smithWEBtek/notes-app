@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+/notes-app-ui/node_modules
 /.pnp
 .pnp.js
 
