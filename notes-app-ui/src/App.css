@@ -34,6 +34,11 @@ body {
   font-family: monospace;
 }
 
+.note-source {
+  font-family: monospace;
+  font-style: italic;
+}
+
 .note-item {
   background-color: #f9f9f9;
   border-radius: 5px;

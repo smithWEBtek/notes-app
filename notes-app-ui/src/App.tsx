@@ -5,6 +5,7 @@ type Note = {
   id: string;
   title: string;
   content: string;
+  source: string;
 };
 
 function App() {
@@ -13,44 +14,53 @@ function App() {
       id: crypto.randomUUID(),
       title: "A title",
       content: "The content of the note",
+      source: "default",
     },
     {
       id: crypto.randomUUID(),
       title: "A 2nd title",
       content: "The content of the second note",
+      source: "default",
     },
     {
       id: crypto.randomUUID(),
       title: "A third title",
       content: "The content of the third note",
+      source: "default",
     },
     {
       id: crypto.randomUUID(),
       title: "Fourth note title",
       content: "The content of the 4th note",
+      source: "default",
     },
   ]);
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [source, setSource] = useState("");
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
 
   const handleNoteClick = (note: Note) => {
     setSelectedNote(note);
     setTitle(note.title);
     setContent(note.content);
+    setSource(note.source);
   };
 
   const handleAddNote = (event: FormEvent) => {
     event.preventDefault();
+    const source = "added";
     const newNote: Note = {
       id: crypto.randomUUID(),
       title,
       content,
+      source,
     };
     setNotes([newNote, ...notes]);
     setTitle("");
     setContent("");
+    setSource("");
   };
 
   const handleUpdateNote = (event: FormEvent) => {
@@ -63,6 +73,7 @@ function App() {
       id: selectedNote.id,
       title,
       content,
+      source: "updated",
     };
 
     const updatedNotesList = notes.map((note) =>
@@ -72,6 +83,7 @@ function App() {
     setNotes(updatedNotesList);
     setTitle("");
     setContent("");
+    setSource("");
     setSelectedNote(null);
   };
 
@@ -82,9 +94,9 @@ function App() {
   };
 
   const handleDeleteNote = (event: MouseEvent, noteId: string) => {
-        event.stopPropagation();
-        const updatedNotes = notes.filter((note) => note.id !== noteId);
-        setNotes(updatedNotes);
+    event.stopPropagation();
+    const updatedNotes = notes.filter((note) => note.id !== noteId);
+    setNotes(updatedNotes);
   };
 
   const renderedNotes = notes.map((note) => {
@@ -99,6 +111,10 @@ function App() {
         </div>
         <h2 className="note-title">{note.title}</h2>
         <p className="note-content">{note.content}</p>
+        <p className="note-source">
+          <label htmlFor="source">source: </label>
+          {note.source}
+        </p>
       </div>
     );
   });
@@ -107,9 +123,9 @@ function App() {
     <div className="app-container">
       <form
         className="note-form"
-        onSubmit={(event) =>
-          selectedNote ? handleUpdateNote(event) : handleAddNote(event)
-        }
+        onSubmit={(event) => {
+          selectedNote ? handleUpdateNote(event) : handleAddNote(event);
+        }}
       >
         <input
           value={title}
@@ -126,7 +142,7 @@ function App() {
           rows={10}
           required
         ></textarea>
-
+        <input value={source} hidden placeholder="source" readOnly />
         {selectedNote ? (
           <div className="edit-buttons">
             <button type="submit" onClick={handleUpdateNote}>
